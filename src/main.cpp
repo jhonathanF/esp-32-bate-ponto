@@ -1,25 +1,27 @@
 #include <LiquidCrystal.h>
 #include <Arduino.h>
-
+#include <stdint.h>
+#include <RTClib.h>
+#include <EEPROM.h>
 #include <ArduinoJson.h>
 #include "string.h"
 #include "../lib/MyKeypad/MyKeypad.h"
 #include "../lib/MyEEPROM.h"
+#include "../lib/MyUtils/MyUtils.h"
 
 const int rs = 23, en = 19, d4 = 18, d5 = 5, d6 = 4, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 Keypad customKeypad = setupKeypad();
 void loop2(void *z);
+void updateLCD(String firstRow);
 char buffer[6];
 void setup()
 {
+    startCLock();
     Serial.begin(115200);
     lcd.begin(16, 2);
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("ID: ");
-    lcd.setCursor(0, 1);
-    lcd.print("17/09/2019 02:09");
+    delay(1000);
+    updateLCD("ID: ");
     xTaskCreatePinnedToCore(loop2, "loop2", 8192, NULL, 1, NULL, 0);
 }
 
@@ -34,7 +36,8 @@ void loop()
         deserializeJson(doc, cmd);
         if (doc["type"] == 1)
         {
-            //handle Time
+            adjustDateTime(doc['ano'], doc['mes'], doc['dia'], doc['hora'], doc['minuto'], doc['segundo']);
+
             Serial.print("{\"status\": 200, \"type\": 1,  \"msg\": \"Hora alterada com sucesso!\"} ");
         }
         else if (doc["type"] == 2)
@@ -65,21 +68,6 @@ void loop2(void *z)
                 buffer[cur_len + 1] = '\0';
             }
             Serial.println(buffer);
-            Serial.print("{\"msg\": \"Recebi tudo!\"} ");
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("ID: ");
-            lcd.print(buffer);
-            lcd.setCursor(0, 1);
-             lcd.print(bufferRegister.dia);
-            lcd.print("/");
-            lcd.print(bufferRegister.mes);
-            lcd.print("/");
-            lcd.print(bufferRegister.ano);
-            lcd.print(" ");
-            lcd.print(bufferRegister.hora);
-            lcd.print(":");
-            lcd.print(bufferRegister.minuto);
         }
 
         if (strlen(buffer) == 4)
@@ -89,38 +77,32 @@ void loop2(void *z)
             //Exibir MSGM
             Serial.print("Bom dia - ");
             Serial.print(buffer);
-            Serial.println();
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Bom dia - ");
-            lcd.print(buffer);
-            lcd.setCursor(0, 1);
-            lcd.print(bufferRegister.dia);
-            lcd.print("/");
-            lcd.print(bufferRegister.mes);
-            lcd.print("/");
-            lcd.print(bufferRegister.ano);
-            lcd.print(" ");
-            lcd.print(bufferRegister.hora);
-            lcd.print(":");
-            lcd.print(bufferRegister.minuto);
+            updateLCD("ID: ");
 
             memset(buffer, 0, sizeof buffer);
             delay(1500);
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("ID: ");
-            lcd.setCursor(0, 1);
-            lcd.print(bufferRegister.dia);
-            lcd.print("/");
-            lcd.print(bufferRegister.mes);
-            lcd.print("/");
-            lcd.print(bufferRegister.ano);
-            lcd.print(" ");
-            lcd.print(bufferRegister.hora);
-            lcd.print(":");
-            lcd.print(bufferRegister.minuto);
         }
-        delay(10);
+        updateLCD("ID: ");
+        delay(50);
     }
+}
+void updateLCD(String firstRow)
+{
+    DateTime currentTime = getCurrentTime();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(firstRow);
+    lcd.print(buffer);
+    lcd.setCursor(0, 1);
+    lcd.print(currentTime.day(), DEC);
+    lcd.print("/");
+    lcd.print(currentTime.month(), DEC);
+    lcd.print("/");
+    lcd.print(currentTime.year() - 2000, DEC);
+    lcd.print(" ");
+    lcd.print(currentTime.hour(), DEC);
+    lcd.print(":");
+    lcd.print(currentTime.minute(), DEC);
+    lcd.print(":");
+    lcd.print(currentTime.second(), DEC);
 }

@@ -1,6 +1,6 @@
 
-#ifndef EEPROMB_H
-#define EEPROMB_H
+#ifndef MyEEPROM_H
+#define MyEEPROM_H
 
 #include <stdint.h>
 #include <EEPROM.h>
