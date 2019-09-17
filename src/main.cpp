@@ -21,8 +21,8 @@ void setup()
     Serial.begin(115200);
     lcd.begin(16, 2);
     begin();
-    reset();
-    wipeUsers();
+    // reset();
+    // wipeUsers();
     adjustDateTimeBySystem();
     loadUsersToRAM();
     loadRegistersToRAM();
