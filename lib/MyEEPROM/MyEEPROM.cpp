@@ -10,11 +10,25 @@ void begin()
     return;
 }
 
+
+void wipeUsers(){
+
+    int aux=0;
+
+    while(aux < MAX_USERS){
+        EEPROM.writeShort(aux, 0);
+        aux = aux +2;
+    }
+
+
+
+}
 void reset()
 {
 
     EEPROM.writeShort(LAST_REGISTER_POS, EEPROM_REG_ADRSTART);
     EEPROM.commit();
+
     return;
 }
 
