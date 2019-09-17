@@ -78,4 +78,5 @@ int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minut
 int findUser(int user);
 
 reg getRegister(int index);
+int userState(int user);
 #endif
