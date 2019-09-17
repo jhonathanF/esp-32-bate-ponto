@@ -70,7 +70,7 @@ int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minut
     bufferRegister.dia = dia;
     bufferRegister.hora = hora;
     bufferRegister.minuto = minuto;
-    bufferRegister.entrada = entrada;
+    bufferRegister.entrada = !userState(id);
 
     int aux = getLastAddress();
     if (aux > 505)
