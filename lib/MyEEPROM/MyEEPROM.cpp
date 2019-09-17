@@ -99,7 +99,7 @@ uint8_t findUserAddress(uint16_t user)
     }
 }
 
-int userState(int user)
+uint8_t userState(int user)
 {
 
     int aux = (getLastAddress() - EEPROM_REG_ADRSTART) / STRUCT_SIZE;
