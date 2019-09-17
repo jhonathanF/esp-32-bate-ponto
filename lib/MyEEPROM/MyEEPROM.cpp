@@ -50,7 +50,7 @@ void loadRegistersToRAM()
 int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minuto, int entrada)
 {
 
-    bufferRegister.id = id;
+    bufferRegister.id = findUserAddress(id);
     bufferRegister.ano = ano - 2000;
     bufferRegister.mes = mes;
     bufferRegister.dia = dia;
@@ -65,7 +65,7 @@ int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minut
     }
     EEPROM.put(aux, bufferRegister);
     registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = bufferRegister; 
-    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = id;// escreve na RAM o valor do buffer
+    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE].id = id;// escreve na RAM o valor do buffer
     EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);               // att last address
     EEPROM.commit();
     return 1;
@@ -124,7 +124,7 @@ int addUserToEEPROM(uint16_t user)
 
         uint16_t address = 0;
 
-        while (EEPROM.readShort(address) == 0 && address < EEPROM_USER_ADRLIMIT)
+        while (EEPROM.readShort(address) != 0)
         {
             address = address + 2;
         }
