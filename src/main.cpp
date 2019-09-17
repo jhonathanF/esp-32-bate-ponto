@@ -60,10 +60,10 @@ void loop()
             if (posicoes <= 0)
             {
                 DynamicJsonDocument docToSend(1024);
-                serializeJson(docToSend, Serial);
                 docToSend["status"] = 400;
                 docToSend["type"] = 3;
                 docToSend["msg"] = "Sem Registros";
+                serializeJson(docToSend, Serial);
             }
             else
             {
