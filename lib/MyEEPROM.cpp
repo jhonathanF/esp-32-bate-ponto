@@ -40,7 +40,6 @@ int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minut
     bufferRegister.minuto = minuto;
     bufferRegister.entrada = entrada;
 
-
     int aux = getLastAddress();
     if (aux > 505)
     {
@@ -75,23 +74,40 @@ void loadUsersToRAM()
 int addUserToEEPROM(uint16_t user)
 {
 
-    uint16_t address = 0;
-
-    while (EEPROM.readShort(address) == 0 && address < EEPROM_USER_ADRLIMIT)
-    {
-        address = address + 2;
-    }
-
-    if (address > EEPROM_USER_ADRLIMIT - 1)
+    if (findUser(user) == 0)
     {
 
-        return -1;
-        // Limite de usuárioas cadastrados excedido
-    }
-    else
-    {
-        EEPROM.writeShort(address, user);
-        return 1;
+        uint16_t address = 0;
+
+        while (EEPROM.readShort(address) == 0 && address < EEPROM_USER_ADRLIMIT)
+        {
+            address = address + 2;
+        }
+
+        if (address > EEPROM_USER_ADRLIMIT - 1)
+        {
+
+            return -1;
+            // Limite de usuárioas cadastrados excedido
+        }
+        else
+        {
+            EEPROM.writeShort(address, user);
+            return 1;
+        }
+    }else{
+
+        return -2; // User já existe
     }
 }
 
+int findUser(int user){
+    int aux;
+    for(aux = 0; aux ++; aux < MAX_USERS){
+        if(users[aux] == user){
+            return 1;
+        }
+    }
+    return 0;
+
+}
