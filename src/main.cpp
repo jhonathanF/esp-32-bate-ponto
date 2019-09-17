@@ -6,7 +6,7 @@
 #include <ArduinoJson.h>
 #include "string.h"
 #include "../lib/MyKeypad/MyKeypad.h"
-#include "../lib/MyEEPROM.h"
+#include "../lib/MyEEPROM/MyEEPROM.h"
 #include "../lib/MyUtils/MyUtils.h"
 
 const int rs = 23, en = 19, d4 = 18, d5 = 5, d6 = 4, d7 = 2;
@@ -20,6 +20,10 @@ void setup()
     startCLock();
     Serial.begin(115200);
     lcd.begin(16, 2);
+    begin();
+    reset();
+    loadUsersToRAM();
+    loadRegistersToRAM();
     delay(1000);
     updateLCD("ID: ");
     xTaskCreatePinnedToCore(loop2, "loop2", 8192, NULL, 1, NULL, 0);
@@ -42,13 +46,42 @@ void loop()
         }
         else if (doc["type"] == 2)
         {
-            //handle Time
-            Serial.print("{\"status\": 200, \"type\": 2,  \"msg\": \"Cadastrado com sucesso!\"} ");
+            if (addUserToEEPROM(doc["matricula"]) > 0)
+                Serial.print("{\"status\": 200, \"type\": 2,  \"msg\": \"Cadastrado com sucesso!\"} ");
+            else
+                Serial.print("{\"status\": 500, \"type\": 2,  \"msg\": \"Erro ao cadastrar!\"} ");
         }
         else if (doc["type"] == 3)
         {
             //handle Time
-            Serial.print("{\"status\": 200, \"type\": 3,  \"msg\": \"Toma o relatorio Irmão\"} ");
+
+            int i = 0;
+            int posicoes = ((getLastAddress() - EEPROM_REG_ADRSTART) / STRUCT_SIZE);
+            if (posicoes <= 0)
+            {
+                DynamicJsonDocument docToSend(1024);
+                serializeJson(docToSend, Serial);
+                docToSend["status"] = 400;
+                docToSend["type"] = 3;
+                docToSend["msg"] = "Sem Registros";
+            }
+            else
+            {
+                for (i = 0; i < posicoes; i++)
+                {
+                    DynamicJsonDocument docToSend(1024);
+                    docToSend["status"] = 200;
+                    docToSend["type"] = 3;
+                    docToSend["id"] = registers[i].id;
+                    docToSend["ano"] = registers[i].ano;
+                    docToSend["mes"] = registers[i].mes;
+                    docToSend["dia"] = registers[i].dia;
+                    docToSend["hora"] = registers[i].hora;
+                    docToSend["minuto"] = registers[i].minuto;
+                    docToSend["entrada"] = registers[i].entrada;
+                    serializeJson(docToSend, Serial);
+                }
+            }
         }
     }
 }
@@ -72,12 +105,25 @@ void loop2(void *z)
 
         if (strlen(buffer) == 4)
         {
-            //Buscar Cliente
-            //Registrar
+            int id;
+            sscanf(buffer, "%d", &id);
+            if (findUser(id))
+            {
+                writeRegisterToEEPROM(id, getCurrentTime().year(), getCurrentTime().month(),
+                                      getCurrentTime().day(),
+                                      getCurrentTime().hour(),
+                                      getCurrentTime().minute(),
+                                      getCurrentTime().second());
+
+                updateLCD("Bom Dia: ");
+            }
+            else
+            {
+                updateLCD("ID nao encontrado: ");
+            }
             //Exibir MSGM
-            Serial.print("Bom dia - ");
+
             Serial.print(buffer);
-            updateLCD("ID: ");
 
             memset(buffer, 0, sizeof buffer);
             delay(1500);
