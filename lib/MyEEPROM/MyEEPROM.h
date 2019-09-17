@@ -75,7 +75,7 @@ int addUserToEEPROM(uint16_t user);
 
 //Escreve na EEPROM os valores passados;
 int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minuto, int entrada);
-int findUser(int user);
+int findUser(uint16_t user);
 
 reg getRegister(int index);
 int userState(int user);
