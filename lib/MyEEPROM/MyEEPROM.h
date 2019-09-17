@@ -79,4 +79,5 @@ int findUser(int user);
 
 reg getRegister(int index);
 int userState(int user);
+int findUserAddress(int user);
 #endif
