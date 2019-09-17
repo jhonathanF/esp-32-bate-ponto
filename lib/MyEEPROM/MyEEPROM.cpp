@@ -64,7 +64,8 @@ int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minut
         return -1; /// Espaço insuficiente para mais registros
     }
     EEPROM.put(aux, bufferRegister);
-    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = bufferRegister; // escreve na RAM o valor do buffer
+    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = bufferRegister; 
+    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = id;// escreve na RAM o valor do buffer
     EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);               // att last address
     EEPROM.commit();
     return 1;
