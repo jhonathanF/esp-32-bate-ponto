@@ -75,4 +75,6 @@ int addUserToEEPROM(uint16_t user);
 //Escreve na EEPROM os valores passados;
 int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minuto, int entrada);
 
+int userState(int user);
+
 #endif
