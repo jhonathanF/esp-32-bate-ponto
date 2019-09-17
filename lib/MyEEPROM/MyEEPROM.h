@@ -79,5 +79,5 @@ int findUser(int user);
 
 reg getRegister(int index);
 int userState(int user);
-int findUserAddress(int user);
+uint8_t findUserAddress(int user);
 #endif
