@@ -45,6 +45,7 @@ void loadRegistersToRAM()
     {
         int track = aux + EEPROM_REG_ADRSTART;
         EEPROM.get(track, registers[cont]);
+        registers[cont].id = EEPROM.readByte(track);
         /*
         registros[cont].id = EEPROM.readShort(track);
         registros[cont].hora = EEPROM.readShort(track + 1);

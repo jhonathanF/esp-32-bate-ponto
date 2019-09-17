@@ -47,7 +47,7 @@
 
 typedef struct reg
 {
-    uint16_t id;
+    uint8_t id;
     uint8_t hora;
     uint8_t minuto;
     uint8_t dia;
