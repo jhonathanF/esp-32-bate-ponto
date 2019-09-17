@@ -29,8 +29,18 @@ void loadRegistersToRAM()
     }
 }
 
-int writeRegisterToEEPROM()
+int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minuto, int entrada)
 {
+
+    bufferRegister.id = id;
+    bufferRegister.ano = ano - 2000;
+    bufferRegister.mes = mes;
+    bufferRegister.dia = dia;
+    bufferRegister.hora = hora;
+    bufferRegister.minuto = minuto;
+    bufferRegister.entrada = entrada;
+
+
     int aux = getLastAddress();
     if (aux > 505)
     {
@@ -44,10 +54,7 @@ int writeRegisterToEEPROM()
 
 int getLastAddress()
 {
-
-    uint16_t aux;
-    aux = EEPROM.readShort(LAST_REGISTER_POS);
-    return aux;
+    return EEPROM.readShort(LAST_REGISTER_POS);
 }
 
 void loadUsersToRAM()
@@ -87,3 +94,4 @@ int addUserToEEPROM(uint16_t user)
         return 1;
     }
 }
+

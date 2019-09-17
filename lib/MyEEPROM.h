@@ -73,6 +73,7 @@ void loadRegistersToRAM();
 int addUserToEEPROM(uint16_t user);
 
 //Escreve na EEPROM os valores colocados no buffer;
-int writeRegisterToEEPROM();
+int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minuto, int entrada);
+
 
 #endif
