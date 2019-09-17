@@ -41,11 +41,15 @@ void loadRegistersToRAM()
     int aux = 0;
     int cont = 0;
 
+    if(getLastAddress()== EEPROM_REG_ADRSTART){
+        Serial.println("EEPROM vazia");
+
+    }
+
     while (aux != (getLastAddress() - EEPROM_REG_ADRSTART))
     {
         int track = aux + EEPROM_REG_ADRSTART;
         EEPROM.get(track, registers[cont]);
-        registers[cont].id = EEPROM.readByte(track);
         /*
         registros[cont].id = EEPROM.readShort(track);
         registros[cont].hora = EEPROM.readShort(track + 1);
