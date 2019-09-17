@@ -22,6 +22,7 @@ void setup()
     lcd.begin(16, 2);
     begin();
     reset();
+    adjustDateTimeBySystem();
     loadUsersToRAM();
     loadRegistersToRAM();
     delay(1000);

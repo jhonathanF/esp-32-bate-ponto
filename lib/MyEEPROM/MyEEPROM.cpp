@@ -47,10 +47,10 @@ void loadRegistersToRAM()
     }
 }
 
-int writeRegisterToEEPROM(int idU, int ano, int mes, int dia, int hora, int minuto, int entrada)
+int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minuto, int entrada)
 {
 
-    bufferRegister.id = findUserAddress(bufferRegister.id);
+    bufferRegister.id = id;
     bufferRegister.ano = ano - 2000;
     bufferRegister.mes = mes;
     bufferRegister.dia = dia;
@@ -58,17 +58,15 @@ int writeRegisterToEEPROM(int idU, int ano, int mes, int dia, int hora, int minu
     bufferRegister.minuto = minuto;
     bufferRegister.entrada = entrada;
 
-    int aux = (getLastAddress() - EEPROM_REG_ADRSTART) / STRUCT_SIZE;
+    int aux = getLastAddress();
     if (aux > 505)
     {
         return -1; /// Espaço insuficiente para mais registros
     }
-    EEPROM.put(getLastAddress(), bufferRegister);
+    EEPROM.put(aux, bufferRegister);
+    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = bufferRegister; // escreve na RAM o valor do buffer
+    EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);               // att last address
     EEPROM.commit();
-    registers[aux] = bufferRegister; // RAM
-    registers[aux].id = idU;         // escreve na RAM o valor do buffer
-    EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);
-    EEPROM.commit(); // att last address
     return 1;
 }
 
@@ -162,9 +160,4 @@ int findUser(int user)
         }
     }
     return 0;
-}
-
-reg getRegister(int index)
-{
-    return registers[index];
 }
