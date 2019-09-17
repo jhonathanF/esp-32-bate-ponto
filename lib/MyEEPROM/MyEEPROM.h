@@ -78,7 +78,7 @@ int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minut
 int findUser(uint16_t user);
 
 reg getRegister(int index);
-int userState(int user);
+uint8_t userState(int user);
 uint8_t findUserAddress(uint16_t user);
 
 void wipeUsers();
