@@ -2,9 +2,8 @@
 
 #include "../lib/utils.h"
 
-
-
-void attBufferRegister(){
+void attBufferRegister()
+{
 
     DateTime now = rtc.now;
 
@@ -15,5 +14,3 @@ void attBufferRegister(){
     bufferRegister.ano = now.year;
     return;
 }
-
-

@@ -1,8 +1,8 @@
 
 #include "MyEEPROM.h"
 
-
-void reset(){
+void reset()
+{
     EEPROM.writeShort(LAST_REGISTER_POS, EEPROM_REG_ADRSTART);
     return;
 }
@@ -37,8 +37,8 @@ int writeRegisterToEEPROM()
         return -1; /// Espaço insuficiente para mais registros
     }
     EEPROM.put(aux, bufferRegister);
-    registers[(aux - EEPROM_REG_ADRSTART)/STRUCT_SIZE] = bufferRegister; // escreve na RAM o valor do buffer
-    EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE); // att last address
+    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = bufferRegister; // escreve na RAM o valor do buffer
+    EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);               // att last address
     return 1;
 }
 

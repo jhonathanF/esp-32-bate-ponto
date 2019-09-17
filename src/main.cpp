@@ -4,6 +4,7 @@
 #include <ArduinoJson.h>
 #include "string.h"
 #include "../lib/MyKeypad/MyKeypad.h"
+#include "../lib/MyEEPROM.h"
 
 const int rs = 23, en = 19, d4 = 18, d5 = 5, d6 = 4, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);

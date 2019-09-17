@@ -30,7 +30,7 @@
 //---------------------------
 // 32 /   ENDEREÇO ID      //
 // 33 /   HORA             //
-// 34 /   Minuto           // 
+// 34 /   Minuto           //
 // 35 /   Dia              //  -- > Struct
 // 36 /   Mes              //
 // 37 /   Ano              //
@@ -43,8 +43,7 @@
 #define EEPROM_REG_ADRSTART 32
 #define LAST_REGISTER_POS 30
 #define STRUCT_SIZE 7
-#define MAX_REGISTERS (EEPROM_SIZE - EEPROM_REG_ADRSTART)/STRUCT_SIZE - 1
-
+#define MAX_REGISTERS (EEPROM_SIZE - EEPROM_REG_ADRSTART) / STRUCT_SIZE - 1
 
 typedef struct reg
 {
@@ -54,13 +53,12 @@ typedef struct reg
     uint8_t dia;
     uint8_t mes;
     uint8_t ano;
-    uint8_t estrada;
+    uint8_t entrada;
 } reg;
 
-
- uint16_t users[MAX_USERS] = {};
- reg registers[MAX_REGISTERS] = {};
- reg bufferRegister = {};
+uint16_t users[MAX_USERS] = {};
+reg registers[MAX_REGISTERS] = {};
+reg bufferRegister = {};
 
 //Redefine o valor de Last Address para posição inicial
 void reset();
@@ -72,7 +70,7 @@ void loadUsersToRAM();
 void loadRegistersToRAM();
 
 // Ex: addUserToEEPROM(6352);
-int addUserToEEPROM(uint16_t user); 
+int addUserToEEPROM(uint16_t user);
 
 //Escreve na EEPROM os valores colocados no buffer;
 int writeRegisterToEEPROM();
