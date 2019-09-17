@@ -4,6 +4,7 @@
 void reset()
 {
     EEPROM.writeShort(LAST_REGISTER_POS, EEPROM_REG_ADRSTART);
+    EEPROM.commit();
     return;
 }
 
@@ -29,10 +30,51 @@ void loadRegistersToRAM()
     }
 }
 
+int getLastAddress()
+{
+    return EEPROM.read(LAST_REGISTER_POS);
+}
+
+int findUserAddress(int user)
+{
+
+    int aux;
+
+    for (aux = 0; aux < MAX_USERS; aux++)
+    {
+        if (users[aux] == user)
+        {
+            return aux;
+        }
+    }
+}
+
+int userState(int user) // Ex 2445
+{
+
+    int aux = getLastAddress() - EEPROM_REG_ADRSTART / STRUCT_SIZE; // supor aux = 10
+
+    while (aux < 0)
+    {
+        if (user == registers[aux].id)
+        {
+            return registers[aux].entrada;
+        }
+        aux--;
+    }
+
+    uint8_t entrada;
+
+    user = EEPROM.readByte(getLastAddress() - STRUCT_SIZE);
+
+    //return EEPROM.readByte(); // leitura 0
+    //return 1;                 // leitura 1
+}
+
 int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minuto, int entrada)
 {
 
-    bufferRegister.id = id;
+    bufferRegister.id = findUserAddress(bufferRegister.id);
     bufferRegister.ano = ano - 2000;
     bufferRegister.mes = mes;
     bufferRegister.dia = dia;
@@ -47,13 +89,9 @@ int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minut
     }
     EEPROM.put(aux, bufferRegister);
     registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = bufferRegister; // escreve na RAM o valor do buffer
-    EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);               // att last address
+    EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);
+    EEPROM.commit(); // att last address
     return 1;
-}
-
-int getLastAddress()
-{
-    return EEPROM.readShort(LAST_REGISTER_POS);
 }
 
 void loadUsersToRAM()
@@ -93,21 +131,26 @@ int addUserToEEPROM(uint16_t user)
         else
         {
             EEPROM.writeShort(address, user);
+            EEPROM.commit();
             return 1;
         }
-    }else{
+    }
+    else
+    {
 
         return -2; // User já existe
     }
 }
 
-int findUser(int user){
+int findUser(int user)
+{
     int aux;
-    for(aux = 0; aux ++; aux < MAX_USERS){
-        if(users[aux] == user){
+    for (aux = 0; aux++; aux < MAX_USERS)
+    {
+        if (users[aux] == user)
+        {
             return 1;
         }
     }
     return 0;
-
 }
