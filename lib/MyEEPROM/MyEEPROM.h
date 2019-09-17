@@ -20,7 +20,7 @@
 // 6 Bytes por registro
 
 //////////// 1 Byte /////////
-// 00 /   ID USUÁRIO 00    //
+// 00 /   ID USUÁRIO 00    // 2222
 // 01 /   ID USUÁRIO 00    //
 // .  /        .           //
 // 29 /   ID USUÁRIO 14    //
@@ -28,7 +28,7 @@
 // 30 /   Last Register    //
 // 31 /   Address Position //   -- > Ultimo endereço gravado
 //---------------------------
-// 32 /   ENDEREÇO ID      //
+// 32 /   ENDEREÇO ID      //  
 // 33 /   HORA             //
 // 34 /   Minuto           //
 // 35 /   Dia              //  -- > Struct
@@ -42,12 +42,12 @@
 #define MAX_USERS 15
 #define EEPROM_REG_ADRSTART 32
 #define LAST_REGISTER_POS 30
-#define STRUCT_SIZE 7
+#define STRUCT_SIZE 8
 #define MAX_REGISTERS (EEPROM_SIZE - EEPROM_REG_ADRSTART) / STRUCT_SIZE - 1
 
 typedef struct reg
 {
-    uint8_t id;
+    uint16_t id;
     uint8_t hora;
     uint8_t minuto;
     uint8_t dia;
