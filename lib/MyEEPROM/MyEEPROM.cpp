@@ -66,16 +66,15 @@ int writeRegisterToEEPROM(int idU, int ano, int mes, int dia, int hora, int minu
     EEPROM.put(getLastAddress(), bufferRegister);
     EEPROM.commit();
     registers[aux] = bufferRegister; // RAM
-    registers[aux].id = idU;         // escreve na RAM o valor do buffer
     EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);
     EEPROM.commit(); // att last address
     return 1;
 }
 
-int findUserAddress(int user)
+uint8_t findUserAddress(int user)
 {
 
-    int aux;
+    uint8_t aux;
 
     for (aux = 0; aux < MAX_USERS; aux++)
     {
@@ -89,7 +88,7 @@ int findUserAddress(int user)
 int userState(int user)
 {
 
-    int aux = getLastAddress() - EEPROM_REG_ADRSTART / STRUCT_SIZE;
+    int aux = (getLastAddress() - EEPROM_REG_ADRSTART) / STRUCT_SIZE;
 
     while (aux < 0)
     {
@@ -158,10 +157,11 @@ int findUser(int user)
     {
         if (users[aux] == user)
         {
-            return 1;
+            return 1; // achou usuário
         }
     }
-    return 0;
+    return 0; // n encontrou
+
 }
 
 reg getRegister(int index)
