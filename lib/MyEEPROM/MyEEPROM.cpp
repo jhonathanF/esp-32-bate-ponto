@@ -70,7 +70,7 @@ int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minut
     return 1;
 }
 
-uint8_t findUserAddress(int user)
+uint8_t findUserAddress(uint16_t user)
 {
 
     uint8_t aux;
@@ -136,7 +136,7 @@ int addUserToEEPROM(uint16_t user)
         }
         else
         {
-            EEPROM.writeShort(address, findUserAddress(user));
+            EEPROM.writeShort(address, user);
             EEPROM.commit();
             loadUsersToRAM();
             return 1;
@@ -149,7 +149,7 @@ int addUserToEEPROM(uint16_t user)
     }
 }
 
-int findUser(int user)
+int findUser(uint16_t user)
 {
     int aux;
     for (aux = 0; aux < MAX_USERS; aux++)
