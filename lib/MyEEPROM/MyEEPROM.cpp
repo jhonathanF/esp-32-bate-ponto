@@ -138,7 +138,7 @@ int addUserToEEPROM(uint16_t user)
         }
         else
         {
-            EEPROM.writeShort(address, user);
+            EEPROM.writeShort(address, findUserAddress(user));
             EEPROM.commit();
             loadUsersToRAM();
             return 1;
