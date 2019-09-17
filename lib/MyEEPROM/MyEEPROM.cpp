@@ -10,18 +10,16 @@ void begin()
     return;
 }
 
+void wipeUsers()
+{
 
-void wipeUsers(){
+    int aux = 0;
 
-    int aux=0;
-
-    while(aux < MAX_USERS){
+    while (aux < MAX_USERS)
+    {
         EEPROM.writeShort(aux, 0);
-        aux = aux +2;
+        aux = aux + 2;
     }
-
-
-
 }
 void reset()
 {
@@ -78,9 +76,9 @@ int writeRegisterToEEPROM(int id, int ano, int mes, int dia, int hora, int minut
         return -1; /// Espaço insuficiente para mais registros
     }
     EEPROM.put(aux, bufferRegister);
-    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = bufferRegister; 
-    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE].id = id;// escreve na RAM o valor do buffer
-    EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);               // att last address
+    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE] = bufferRegister;
+    registers[(aux - EEPROM_REG_ADRSTART) / STRUCT_SIZE].id = id; // escreve na RAM o valor do buffer
+    EEPROM.writeShort(LAST_REGISTER_POS, aux + STRUCT_SIZE);      // att last address
     EEPROM.commit();
     return 1;
 }
@@ -103,7 +101,7 @@ uint8_t userState(int user)
 {
 
     int aux = (getLastAddress() - EEPROM_REG_ADRSTART) / STRUCT_SIZE;
-
+    aux = aux - 1;
     while (aux < 0)
     {
         if (user == registers[aux].id)
