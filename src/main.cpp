@@ -71,7 +71,7 @@ void loop2(void *z)
             lcd.print("ID: ");
             lcd.print(buffer);
             lcd.setCursor(0, 1);
-            lcd.print(bufferRegister.dia);
+             lcd.print(bufferRegister.dia);
             lcd.print("/");
             lcd.print(bufferRegister.mes);
             lcd.print("/");

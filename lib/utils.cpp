@@ -2,15 +2,20 @@
 
 #include "../lib/utils.h"
 
-void attBufferRegister()
-{
-
+void attCurrentTime(){
     DateTime now = rtc.now;
 
-    bufferRegister.hora = now.hour;
-    bufferRegister.minuto = now.minute;
-    bufferRegister.dia = now.day;
-    bufferRegister.mes = now.month;
-    bufferRegister.ano = now.year;
+    CurrentTime.hora = now.hour;
+    CurrentTime.minuto = now.minute;
+    CurrentTime.segundo = now.second;
+    CurrentTime.dia = now.day;
+    CurrentTime.mes = now.month;
+    CurrentTime.ano = now.year;
+    return;
+    
+};
+
+void adjustDateTime(int ano, int mes, int dia, int hora, int minuto, int segundo){
+    rtc.adjust(DateTime(ano,mes,dia,hora,minuto,segundo));
     return;
 }
