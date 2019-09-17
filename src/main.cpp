@@ -71,7 +71,15 @@ void loop2(void *z)
             lcd.print("ID: ");
             lcd.print(buffer);
             lcd.setCursor(0, 1);
-            lcd.print("17/09/2019 02:09");
+            lcd.print(bufferRegister.dia);
+            lcd.print("/");
+            lcd.print(bufferRegister.mes);
+            lcd.print("/");
+            lcd.print(bufferRegister.ano);
+            lcd.print(" ");
+            lcd.print(bufferRegister.hora);
+            lcd.print(":");
+            lcd.print(bufferRegister.minuto);
         }
 
         if (strlen(buffer) == 4)
@@ -87,7 +95,15 @@ void loop2(void *z)
             lcd.print("Bom dia - ");
             lcd.print(buffer);
             lcd.setCursor(0, 1);
-            lcd.print("17/09/2019 02:09");
+            lcd.print(bufferRegister.dia);
+            lcd.print("/");
+            lcd.print(bufferRegister.mes);
+            lcd.print("/");
+            lcd.print(bufferRegister.ano);
+            lcd.print(" ");
+            lcd.print(bufferRegister.hora);
+            lcd.print(":");
+            lcd.print(bufferRegister.minuto);
 
             memset(buffer, 0, sizeof buffer);
             delay(1500);
@@ -95,7 +111,15 @@ void loop2(void *z)
             lcd.setCursor(0, 0);
             lcd.print("ID: ");
             lcd.setCursor(0, 1);
-            lcd.print("17/09/2019 02:09");
+            lcd.print(bufferRegister.dia);
+            lcd.print("/");
+            lcd.print(bufferRegister.mes);
+            lcd.print("/");
+            lcd.print(bufferRegister.ano);
+            lcd.print(" ");
+            lcd.print(bufferRegister.hora);
+            lcd.print(":");
+            lcd.print(bufferRegister.minuto);
         }
         delay(10);
     }
