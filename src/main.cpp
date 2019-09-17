@@ -68,11 +68,12 @@ void loop()
             }
             else
             {
-                for (i = 0; i < posicoes; i++)
+                for (i = 0; i < 10; i++)
                 {
                     DynamicJsonDocument docToSend(1024);
                     docToSend["status"] = 200;
                     docToSend["type"] = 3;
+                    docToSend["number"] = i + 1;
                     docToSend["id"] = registers[i].id;
                     docToSend["ano"] = registers[i].ano;
                     docToSend["mes"] = registers[i].mes;
@@ -81,6 +82,7 @@ void loop()
                     docToSend["minuto"] = registers[i].minuto;
                     docToSend["entrada"] = registers[i].entrada;
                     serializeJson(docToSend, Serial);
+                    delay(10);
                 }
             }
         }
