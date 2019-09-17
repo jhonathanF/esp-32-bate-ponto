@@ -22,6 +22,7 @@ void setup()
     lcd.begin(16, 2);
     begin();
     reset();
+    wipeUsers();
     adjustDateTimeBySystem();
     loadUsersToRAM();
     loadRegistersToRAM();
@@ -68,7 +69,7 @@ void loop()
             }
             else
             {
-                for (i = 0; i < 10; i++)
+                for (i = 0; i < posicoes; i++)
                 {
                     DynamicJsonDocument docToSend(1024);
                     docToSend["status"] = 200;
@@ -82,7 +83,7 @@ void loop()
                     docToSend["minuto"] = registers[i].minuto;
                     docToSend["entrada"] = registers[i].entrada;
                     serializeJson(docToSend, Serial);
-                    delay(10);
+                    delay(50);
                 }
             }
         }
