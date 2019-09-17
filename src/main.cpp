@@ -1,38 +1,126 @@
+#include <LiquidCrystal.h>
 #include <Arduino.h>
-#include <Keypad.h>
+
+#include <ArduinoJson.h>
+#include "string.h"
+#include "../lib/MyKeypad/MyKeypad.h"
 #include "../lib/MyEEPROM.h"
-#include "../lib/utils.h"
 
-
-const byte ROWS = 4;
-const byte COLS = 4;
-//define the cymbols on the buttons of the keypads
-char hexaKeys[ROWS][COLS] = {
-    {'1', '4', '7', '*'},
-    {'2', '5', '8', '0'},
-    {'3', '6', '9', '#'},
-    {'A', 'B', 'C', 'D'}};
-byte rowPins[ROWS] = {27, 14, 12, 13};
-byte colPins[COLS] = {32, 33, 25, 26};
-
-//initialize an instance of class NewKeypad
-Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
-
-
-
+const int rs = 23, en = 19, d4 = 18, d5 = 5, d6 = 4, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+Keypad customKeypad = setupKeypad();
+void loop2(void *z);
+char buffer[6];
 void setup()
 {
-  Serial.begin(115200);
-
+    Serial.begin(115200);
+    lcd.begin(16, 2);
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("ID: ");
+    lcd.setCursor(0, 1);
+    lcd.print("17/09/2019 02:09");
+    xTaskCreatePinnedToCore(loop2, "loop2", 8192, NULL, 1, NULL, 0);
 }
 
 void loop()
 {
-  char customKey = customKeypad.getKey();
+    String cmd;
 
-  if (customKey)
-  {
-    Serial.println(customKey);
-  }
-  
+    if (Serial.available() > 0)
+    {
+        cmd = Serial.readStringUntil('}');
+        DynamicJsonDocument doc(1024);
+        deserializeJson(doc, cmd);
+        if (doc["type"] == 1)
+        {
+            //handle Time
+            Serial.print("{\"status\": 200, \"type\": 1,  \"msg\": \"Hora alterada com sucesso!\"} ");
+        }
+        else if (doc["type"] == 2)
+        {
+            //handle Time
+            Serial.print("{\"status\": 200, \"type\": 2,  \"msg\": \"Cadastrado com sucesso!\"} ");
+        }
+        else if (doc["type"] == 3)
+        {
+            //handle Time
+            Serial.print("{\"status\": 200, \"type\": 3,  \"msg\": \"Toma o relatorio Irmão\"} ");
+        }
+    }
+}
+
+void loop2(void *z)
+{
+    Serial.printf("\nloop2() em core: %d", xPortGetCoreID()); // Mostra no monitor em
+    while (1)
+    {
+        char customKey = customKeypad.getKey();
+        if (customKey)
+        {
+            size_t cur_len = strlen(buffer);
+            if (cur_len < 4)
+            {
+                buffer[cur_len] = customKey;
+                buffer[cur_len + 1] = '\0';
+            }
+            Serial.println(buffer);
+            Serial.print("{\"msg\": \"Recebi tudo!\"} ");
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("ID: ");
+            lcd.print(buffer);
+            lcd.setCursor(0, 1);
+             lcd.print(bufferRegister.dia);
+            lcd.print("/");
+            lcd.print(bufferRegister.mes);
+            lcd.print("/");
+            lcd.print(bufferRegister.ano);
+            lcd.print(" ");
+            lcd.print(bufferRegister.hora);
+            lcd.print(":");
+            lcd.print(bufferRegister.minuto);
+        }
+
+        if (strlen(buffer) == 4)
+        {
+            //Buscar Cliente
+            //Registrar
+            //Exibir MSGM
+            Serial.print("Bom dia - ");
+            Serial.print(buffer);
+            Serial.println();
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Bom dia - ");
+            lcd.print(buffer);
+            lcd.setCursor(0, 1);
+            lcd.print(bufferRegister.dia);
+            lcd.print("/");
+            lcd.print(bufferRegister.mes);
+            lcd.print("/");
+            lcd.print(bufferRegister.ano);
+            lcd.print(" ");
+            lcd.print(bufferRegister.hora);
+            lcd.print(":");
+            lcd.print(bufferRegister.minuto);
+
+            memset(buffer, 0, sizeof buffer);
+            delay(1500);
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("ID: ");
+            lcd.setCursor(0, 1);
+            lcd.print(bufferRegister.dia);
+            lcd.print("/");
+            lcd.print(bufferRegister.mes);
+            lcd.print("/");
+            lcd.print(bufferRegister.ano);
+            lcd.print(" ");
+            lcd.print(bufferRegister.hora);
+            lcd.print(":");
+            lcd.print(bufferRegister.minuto);
+        }
+        delay(10);
+    }
 }
